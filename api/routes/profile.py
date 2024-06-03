@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
 from schemas.profile import ProfileCreate, Profile, ProfileUpdate
 from services.profile_service import (
@@ -6,7 +6,7 @@ from services.profile_service import (
     get_profile_service,
     list_profiles_service,
     update_profile_service,
-    delete_profile_service,
+    delete_profiles_service,
     get_total_profiles_service
 )
 from api.dependencies.database import get_db
@@ -47,9 +47,7 @@ def update_profile(profile_id: int, profile: ProfileUpdate, db: Session = Depend
     return updated_profile
 
 
-@router.delete("/profiles/{profile_id}", response_model=Profile)
-def delete_profile(profile_id: int, db: Session = Depends(get_db)):
-    deleted_profile = delete_profile_service(db, profile_id)
-    if deleted_profile is None:
-        raise HTTPException(status_code=404, detail="Profile not found")
-    return deleted_profile
+@router.delete("/profiles/")
+def delete_profiles(profile_ids: list[int] = Body(...), db: Session = Depends(get_db)):
+    delete_profiles_service(db, profile_ids)
+    return {"message": "Profiles deleted successfully", "profile_ids": profile_ids}

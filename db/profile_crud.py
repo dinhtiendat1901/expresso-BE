@@ -37,9 +37,7 @@ def update_profile(db: Session, profile_id: int, update_data: ProfileUpdate):
     return db.query(Profile).filter(Profile.id == profile_id).first()
 
 
-def delete_profile(db: Session, profile_id: int):
-    db_profile = db.query(Profile).filter(Profile.id == profile_id).first()
-    if db_profile:
-        db.delete(db_profile)
-        db.commit()
-        return db_profile
+def delete_profiles(db: Session, profile_ids: list[int]):
+    # Query to find all profiles with IDs in the provided list and delete them
+    db.query(Profile).filter(Profile.id.in_(profile_ids)).delete(synchronize_session='fetch')
+    db.commit()

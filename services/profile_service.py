@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from db.profile_crud import create_profile, get_profile, get_profiles, update_profile, delete_profile, \
+from db.profile_crud import create_profile, get_profile, get_profiles, update_profile, delete_profiles, \
     get_total_profiles
 from schemas.profile import ProfileCreate, ProfileUpdate
 
@@ -27,6 +27,5 @@ def update_profile_service(db: Session, profile_id: int, profile_data: ProfileUp
     return update_profile(db, profile_id, profile_data)
 
 
-def delete_profile_service(db: Session, profile_id: int):
-    # Any pre-deletion checks or business rules can be enforced here
-    return delete_profile(db, profile_id)
+def delete_profiles_service(db: Session, profile_ids: list[int]):
+    delete_profiles(db, profile_ids)
