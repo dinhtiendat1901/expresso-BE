@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import update
 from .models.profile import Profile
 from schemas.profile import ProfileCreate, ProfileUpdate
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 
 
 def get_total_profiles(db: Session):
@@ -17,6 +16,7 @@ def get_profiles(db: Session, skip: int = 0, limit: int = 100, search: str | Non
     query = db.query(Profile)
     if search:
         query = query.filter(or_(Profile.name.ilike(f'%{search}%'), Profile.description.ilike(f'%{search}%')))
+    query = query.order_by(desc(Profile.created_date))
     return query.offset(skip).limit(limit).all()
 
 
