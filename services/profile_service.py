@@ -1,3 +1,5 @@
+from datetime import date
+
 from sqlalchemy.orm import Session
 from db.profile_crud import create_profile, get_profile, get_profiles, update_profile, delete_profiles, \
     get_total_profiles
@@ -18,8 +20,9 @@ def get_profile_service(db: Session, profile_id: int):
     return get_profile(db, profile_id)
 
 
-def list_profiles_service(db: Session, skip: int = 0, limit: int = 100, search: str | None = None):
-    return get_profiles(db, skip=skip, limit=limit, search=search)
+def list_profiles_service(db: Session, skip: int = 0, limit: int = 100, search: str | None = None,
+                          start_date: date | None = None, end_date: date | None = None):
+    return get_profiles(db, skip=skip, limit=limit, search=search, start_date=start_date, end_date=end_date)
 
 
 def update_profile_service(db: Session, profile_id: int, profile_data: ProfileUpdate):

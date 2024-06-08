@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
 from schemas.profile import ProfileCreate, Profile, ProfileUpdate
@@ -33,10 +35,10 @@ def read_profile(profile_id: int, db: Session = Depends(get_db)):
     return profile
 
 
-@router.get("/profiles/", response_model=list[Profile])
-def read_profiles(skip: int = Query(default=0, ge=0), limit: int = Query(default=100, ge=0, le=1000),
-                  search: str = Query(default=None, min_length=3), db: Session = Depends(get_db)):
-    return list_profiles_service(db, skip=skip, limit=limit, search=search)
+@router.get("/profiles/", response_model=list[Profile])  # Adjust the response model if necessary
+def read_profiles(skip: int = 0, limit: int = 100, search: str = None, start_date: date = Query(None),
+                  end_date: date = Query(None), db: Session = Depends(get_db)):
+    return list_profiles_service(db, skip=skip, limit=limit, search=search, start_date=start_date, end_date=end_date)
 
 
 @router.put("/profiles/{profile_id}", response_model=Profile)
