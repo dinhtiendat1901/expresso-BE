@@ -17,8 +17,9 @@ router = APIRouter()
 
 
 @router.get("/profiles/total", response_model=int)
-def read_total_profiles(db: Session = Depends(get_db)):
-    total = get_total_profiles_service(db)
+def read_total_profiles(search: str = None, start_date: date = Query(None),
+                        end_date: date = Query(None), db: Session = Depends(get_db)):
+    total = get_total_profiles_service(db, search=search, start_date=start_date, end_date=end_date)
     return total
 
 

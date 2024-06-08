@@ -6,8 +6,9 @@ from db.profile_crud import create_profile, get_profile, get_profiles, update_pr
 from schemas.profile import ProfileCreate, ProfileUpdate
 
 
-def get_total_profiles_service(db: Session):
-    return get_total_profiles(db)
+def get_total_profiles_service(db: Session, search: str | None = None,
+                               start_date: date | None = None, end_date: date | None = None):
+    return get_total_profiles(db, search=search, start_date=start_date, end_date=end_date)
 
 
 def create_profile_service(db: Session, profile_data: ProfileCreate):

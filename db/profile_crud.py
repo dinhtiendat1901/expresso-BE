@@ -6,8 +6,18 @@ from schemas.profile import ProfileCreate, ProfileUpdate
 from sqlalchemy import or_, desc
 
 
-def get_total_profiles(db: Session):
-    return db.query(Profile).count()
+def get_total_profiles(db: Session, search: str | None = None,
+                       start_date: date | None = None, end_date: date | None = None):
+    query = db.query(Profile)
+    if search:
+        query = query.filter(or_(Profile.name.ilike(f'%{search}%'), Profile.description.ilike(f'%{search}%')))
+    if start_date and end_date:
+        query = query.filter(Profile.created_date >= start_date, Profile.created_date <= end_date)
+    elif start_date:
+        query = query.filter(Profile.created_date >= start_date)
+    elif end_date:
+        query = query.filter(Profile.created_date <= end_date)
+    return query.count()
 
 
 def get_profile(db: Session, profile_id: int):
